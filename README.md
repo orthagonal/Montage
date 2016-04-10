@@ -14,13 +14,10 @@ A command-line tool for processing and creating interactive videos.
 ### Generate video clips
 1. 'oscillate' will make a 'loopable' video that can be played infinitely while waiting for input
 2. 'reverse' will reverse a video
-3. 
+ 
 ### Generate interactive video systems
 1. generate placeholders from interactive graph
-2. generae keyframe video
+2. organize directory structure from interactive graph and directory of files
  
-Generates interactive 
-Operates by splitting video into jpg frames, then rejoining them.
-requires:
-  -- fmpeg
-For now, see command 
+## Requirements:
+  * ffmpeg must be available from command line
