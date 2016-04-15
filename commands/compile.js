@@ -1,5 +1,5 @@
 'use strict';
-
+var fs = require('fs');
 module.exports.builder = {
   r: {
     alias: "rate",

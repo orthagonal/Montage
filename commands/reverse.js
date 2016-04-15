@@ -1,7 +1,9 @@
 'use strict';
 const split = require('./split.js');
 const compile = require('./compile.js');
-
+const fs = require('fs');
+var async = require('async');
+var _ = require('lodash');
 
 module.exports.builder = {
   f: {
@@ -27,13 +29,13 @@ module.exports.builder = {
 };
 
 // inverts/renumbers a sequence of frames from start to end
-function copyInReverseOrder(start, end, next){
+function copyInReverseOrder(fromDir, outputDir, start, end, next){
 	console.log("copyInReverseOrder: %d to %d  ", start, end)
 	for (var i = end; i >= start; i--){
 		try{
 			console.log("inputting %d", i)
 			var fileName = i + ".png"
-			var data = fs.readFileSync(inputDir + fileName)
+			var data = fs.readFileSync(fromDir + fileName)
 			if (!data)
 				return;
 			var outputName = next + ".png";
@@ -47,29 +49,37 @@ function copyInReverseOrder(start, end, next){
 	return next;
 }
 
-function reverseVideo(infile, outfile, inputDir, outputDir, allDone){
+function reverseVideo(infile, outfile, inputDir, outputDir, rate, allDone){
   async.auto({
     delete: (callback) => {
       deleteAll(inputDir);
       deleteAll(outputDir);
       callback();
     },
-    tiles: ['delete', (callback) => {
+    tiles: ['delete', (result, callback) => {
       split.toTiles(infile, outputDir, callback);
     }],
-		reverse: ['tiles', (callback) => {
+		reverse: ['tiles', (result, callback) => {
 			fs.readdir(inputDir, function(err, files){
 				copyInReverseOrder( 1, files.length, 1);
-				compile.fromTiles(outputDir, outfile, callback);
+				compile.fromTiles(outputDir, outfile, rate, callback);
 			});
 		}]
   });
 }
 
+function deleteAll(inputDir){
+	var files = fs.readdir(inputDir)
+	_.each(files, function(file){
+		fs.unlinkSync(file);
+	})
+}
+
 module.exports.handler = (argv) => {
-  reverseVideo(argv.f, argv.d, argv.i, argv.o, (err) => {
+  reverseVideo(argv.f, argv.d, argv.i, argv.o, argv.r, (err) => {
     console.log("converted to tiles")
   });
 };
 module.exports.reverseVideo = reverseVideo;
 module.exports.copyInReverseOrder = copyInReverseOrder;
+module.exports.deleteAll = deleteAll;

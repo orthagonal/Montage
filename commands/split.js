@@ -1,5 +1,6 @@
 'use strict';
 var exec = require('child_process').exec;
+var fs = require('fs');
 
 module.exports.builder = {
   f: {
@@ -14,7 +15,6 @@ module.exports.builder = {
   }
 };
 
-module.exports.toTiles = toTiles;
 function toTiles(fileName, outputDir, callback){
 	try{
     const string = `ffmpeg -r 24 -i ${fileName} ${outputDir}/%d.png`;
@@ -41,3 +41,4 @@ module.exports.handler = (argv) => {
     }
   });
 };
+module.exports.toTiles = toTiles;

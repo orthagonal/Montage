@@ -1,9 +1,10 @@
 {
-  "name": "re",
+  "name": "montage",
   "version": "1.0.0",
-  "description": "Reverse Eta video frame processor",
-  "main": "reverse.js",
+  "main": "index.html",
+  "description": "Montage video frame processor",
   "dependencies": {
+    "async": "^2.0.0-rc.3",
     "lodash": "^4.7.0",
     "yargs": "^4.3.2"
   },

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head ng-app="MontageApp">
+ <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.3/angular.js">
+   </script>
+    <script>
+      var MontageApp = angular.module('MontageApp', []);
+      MontageApp.controller('montage', function montage($scope, $http){
+        $scope.val = "angular";
+      });
+    </script>
+  </head>
+  <body ng-controller="montage">
+    Hi there {{ val }}
+  </body>
+</html>
