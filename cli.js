@@ -3,7 +3,8 @@ const reverse = require('./commands/reverse.js');
 const split = require('./commands/split.js');
 const compile = require('./commands/compile.js');
 const oscillate = require('./commands/oscillate.js');
-const alter = require('./commands/alter.js');
+const placeholders = require('./commands/placeholders.js');
+// const alter = require('./commands/alter.js');
 const greenscreen = require('./commands/greenscreen');
 const _ = require('lodash');
 
@@ -29,18 +30,18 @@ const commands = [
     handler: oscillate.handler
   },
   // simple ramping stuff can be specified as suboptions for 'alter'
-  {
-    name: 'alter',
-    desc: 'alter tiles by a constant amount ',
-    builder: alter.builder,
-    handler: alter.handler
-  },
-  {
-    name: 'greenscreen',
-    desc: 'combine two clips or videos ',
-    builder: greenscreen.builder,
-    handler: greenscreen.handler
-  },
+  // {
+  //   name: 'alter',
+  //   desc: 'alter tiles by a constant amount ',
+  //   builder: alter.builder,
+  //   handler: alter.handler
+  // },
+  // {
+  //   name: 'greenscreen',
+  //   desc: 'combine two clips or videos ',
+  //   builder: greenscreen.builder,
+  //   handler: greenscreen.handler
+  // },
   // {
   //   name: 'exec',
   //   desc: 'execute a file containing a script of video-altering commands ',
@@ -52,6 +53,12 @@ const commands = [
     desc: 'put a directory of tiles into a video ',
     builder: compile.builder,
     handler: compile.handler
+  },
+  {
+    name: 'placeholders',
+    desc: 'generate placeholder videos for testing',
+    builder: placeholders.builder,
+    handler: placeholders.handler
   }
 ];
 
