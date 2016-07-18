@@ -22,8 +22,9 @@ module.exports.builder = {
   },
 };
 
-const loadJunctionGraph = (path) => {
-  return require(path).JunctionGraph;
+const loadJunctionGraph = (pathToGraph) => {
+  return require(pathToGraph).JunctionGraph;
+  // return require('c:/theater/lib/RoomOneJunction.js').JunctionGraph;
 };
 
 const getString = (fileEntry) => {
@@ -38,7 +39,7 @@ const getFileName = (fileName) => {
 
 const makeLabeledVideo = (inputVideo, outputVideo, text, callback) => {
 	try{
-    const string = `ffmpeg -i ${inputVideo} -vf drawtext="fontfile='arial.ttf':fontsize=100:text='${text}':x=300:y=300:fontcolor=white"`;
+    const string = `ffmpeg -i ${inputVideo} -vf drawtext="fontfile='arial.ttf':fontsize=60:text='${text}':x=10:y=300:fontcolor=white"`;
     const string2 = `${string} -b 2500k -codec:v vp8 "${outputVideo}"`;
 		// let string = 'ffmpeg -i ' + inputVideo + ' -vf drawtext="' ;
 		// let string2 = string + "fontfile='Arabia.ttf'";
@@ -87,28 +88,24 @@ const makeVideoPlaceholders = (junctionGraph, rootDir, sourceFile) => {
 	// for each junction:
 	_.each(junctionGraph, function(junction, junctionName){
 		// make directory if it doesn't exist:
-		var dir = rootDir + junctionName.toLowerCase();
+		var dir = path.normalize(rootDir + junctionName.toLowerCase());
 		console.log("checking directory %s", dir);
 		if (!fs.existsSync(dir)){
 			console.log("directory %s doesn't exist, creating it", dir);
 			fs.mkdirSync(dir);
 		}
 		_.each(junction.core.roots, function(root){
- 		// 	fileList.push(root.title)
-  		// textList.push(getString(root))
       fileList.push({
         movie: root.title,
         junction: junctionName,
-        text: `${junctionName} - root ${root.title}`
+        text: `${junctionName} - root \f\v -${root.title} \f\v -${root.description || ''}`
       })
 		});
 		_.each(junction.core.loops, function(loop){
-			// fileList.push(loop.title)
-      // extList.push(getString(loop))
       fileList.push({
         movie: loop.title,
         junction: junctionName,
-        text: `${junctionName} - loop ${loop.title}`
+        text: `${junctionName} - loop \f\v -${loop.title} \f\v -${loop.description || ''}`
       })
 		});
 		_.each(junction.branches, function(branch, name){
@@ -116,18 +113,16 @@ const makeVideoPlaceholders = (junctionGraph, rootDir, sourceFile) => {
         fileList.push({
           movie: bucketItem.title,
           junction: junctionName,
-          text: `${junctionName} - branch ${bucketItem.title}`
+          text: `${junctionName} - branch \f\v ${bucketItem.title} \f\v ${bucketItem.description || ''}`
         });
-				// fileList.push(bucketItem.title);
-				// textList.push(getString(bucketItem));
-			})
-		})
+			});
+		});
 		console.log(fileList);
 	});
   genVideo(fileList, rootDir, sourceFile);
 };
 
 module.exports.handler = (argv) => {
-  const junctionGraph = loadJunctionGraph(argv.g);
+  const junctionGraph = loadJunctionGraph(path.normalize(argv.g));
   makeVideoPlaceholders(junctionGraph, argv.o, argv.s);
 };

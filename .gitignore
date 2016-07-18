@@ -1,2 +1,8 @@
 node_modules
 placeholders
+movies
+*.MOV
+*.webm
+*.mp3
+*.mp4
+*.ttf
