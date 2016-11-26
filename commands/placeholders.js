@@ -31,8 +31,6 @@ const getString = (fileEntry) => {
   return fileEntry.title + " " + fileEntry.hitboxes;
 }
 const getFileName = (fileName) => {
-  console.log('+++++++++=')
-  console.log(fileName)
   var list = fileName.split("/");
   return list[2] + "/" + list[3]
 };
@@ -69,7 +67,7 @@ const getJunctionName = (fullPathName) => {
 const genVideo = (fileList, rootDir, sourceFile) => {
   if (fileList.length===0) return;
   const item = fileList.shift();
-  const outputFilePath = `${rootDir}${path.sep}${item.junction}${path.sep}${path.basename(item.movie)}.webm`;
+  const outputFilePath = `${rootDir}${path.sep}${item.junction}${path.sep}${path.basename(item.movie)}.avi`;
   // if it doesn't exist make a placeholder for it:
   if (!fs.existsSync(outputFilePath)){
     // make a placeholder video with the name of the video in it:
@@ -83,6 +81,7 @@ const genVideo = (fileList, rootDir, sourceFile) => {
 };
 
 const makeVideoPlaceholders = (junctionGraph, rootDir, sourceFile) => {
+  console.log(`making placeholds for ${rootDir} from ${sourceFile}`)
 	const fileList = [];
 	const textList = [];
 	// for each junction:
@@ -98,14 +97,16 @@ const makeVideoPlaceholders = (junctionGraph, rootDir, sourceFile) => {
       fileList.push({
         movie: root.title,
         junction: junctionName,
-        text: `${junctionName} - root \f\v -${root.title} \f\v -${root.description || ''}`
+        text: `${junctionName} - root \f\v -${root.title} \f\v -${''}`
       })
 		});
-		_.each(junction.core.loops, function(loop){
+		_.each(junction.core.loops, function(loop,  thing){
+      console.log('=======================')
+      console.log(thing)
       fileList.push({
         movie: loop.title,
         junction: junctionName,
-        text: `${junctionName} - loop \f\v -${loop.title} \f\v -${loop.description || ''}`
+        text: `${junctionName} - loop \f\v -${loop.title} \f\v `
       })
 		});
 		_.each(junction.branches, function(branch, name){
@@ -113,7 +114,7 @@ const makeVideoPlaceholders = (junctionGraph, rootDir, sourceFile) => {
         fileList.push({
           movie: bucketItem.title,
           junction: junctionName,
-          text: `${junctionName} - branch \f\v ${bucketItem.title} \f\v ${bucketItem.description || ''}`
+          text: `${junctionName} - branch \f\v ${bucketItem.title} \f\v ${bucketItem}`
         });
 			});
 		});
@@ -123,6 +124,7 @@ const makeVideoPlaceholders = (junctionGraph, rootDir, sourceFile) => {
 };
 
 module.exports.handler = (argv) => {
-  const junctionGraph = loadJunctionGraph(path.normalize(argv.g));
+  console.log(argv.g)
+  const junctionGraph = require(argv.g).JunctionGraph;
   makeVideoPlaceholders(junctionGraph, argv.o, argv.s);
 };
